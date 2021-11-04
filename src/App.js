@@ -1,23 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+
+const cardImages = [
+  { src: "/images/helmet-1.png" },
+  { src: "/images/potion-1.png" },
+  { src: "/images/ring-1.png" },
+  { src: "/images/scroll-1.png" },
+  { src: "/images/shield-1.png" },
+  { src: "/images/sword-1.png" },
+];
 
 function App() {
+  //卡片洗牌的狀態
+  const [cards, setCards] = useState([]);
+  //每次一回合後歸零的狀態
+  const [turns, setTurns] = useState(0);
+
+  //洗牌 比0.5大或小
+  const shuffleCards = () => {
+    const shuffledCards = [...cardImages, ...cardImages]
+      .sort(() => Math.random() - 0.5)
+      // 把隨機排序的陣列map(),陣列裡面的東西叫card
+      .map((card) => ({
+        ...card,
+        id: Math.random(),
+      }));
+      setCards(shuffledCards);
+      setTurns(0);
+  };
+
+  console.log(cards, turns);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Magic Match</h1>
+      <button onClick={shuffleCards}>New Game</button>
+      
+      <div className="card-grid">
+        {cards.map(card => (
+          <div className="card" key={card.id}>
+            <div>
+              <img className="front" src={card.src} alt="card front"/>
+              <img className="back" src="/images/cover.png" alt="card back"/>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
